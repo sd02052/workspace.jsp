@@ -74,6 +74,58 @@ public class EmpDAO {
 		return list;
 	}
 
+	// EMP 테이블에서 담당업무를 조회하는 메서드
+	public List<String> jobList(){
+		List<String> jobList = new ArrayList<String>();
+		
+		try {
+			sql = "select distinct(job) from emp order by job";
+			pstmt = con.prepareCall(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				String job = rs.getString("job");
+				
+				jobList.add(job);
+			}
+			
+			rs.close();
+			pstmt.close();
+			//con.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jobList;
+	}
+	
+	// EMP 테이블에서 담당업무가  "MANAGER"인 사원 조회하는 메서드
+	public List<EmpDTO> mgrList(){
+		List<EmpDTO> mgrList = new ArrayList<EmpDTO>();
+		
+		try {
+			sql="select * from emp where job=? order by empno";
+			pstmt=con.prepareCall(sql);
+			pstmt.setString(1, "MANAGER");
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				EmpDTO dto = new EmpDTO();
+				dto.setEmpno(rs.getInt("empno"));
+				dto.setEname(rs.getString("ename"));
+				
+				mgrList.add(dto);
+			}
+			
+			rs.close();
+			pstmt.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return mgrList;
+	}
+	
 	// dept 테이블의 전체 리스트 조회하는 메서드
 	public List<DeptDTO> deptList() {
 		List<DeptDTO> deptList = new ArrayList<DeptDTO>();

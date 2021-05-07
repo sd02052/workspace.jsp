@@ -1,8 +1,11 @@
+<%@page import="com.sist.model.EmpDTO"%>
 <%@page import="com.sist.model.DeptDTO"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
+	List<String> job = (List<String>) request.getAttribute("job");
+	List<EmpDTO> mgr = (List<EmpDTO>) request.getAttribute("mgr");
 	List<DeptDTO> dept = (List<DeptDTO>) request.getAttribute("dept");
 %>
 <!DOCTYPE html>
@@ -31,11 +34,44 @@
 				</tr>
 				<tr>
 					<th>담당업무</th>
-					<td><input type="text" name="job"></td>
+					<td><select name="job">
+							<%
+								if (job.size() == 0) { // 데이터 없는 경우
+							%>
+							<option value="">:::부서번호 없음:::</option>
+							<%
+								} else { // 데이터 있는 경우
+									for (int i = 0; i < job.size(); i++) {
+										String str = job.get(i);
+							%>
+							<option value="<%=str%>">
+								<%=str%></option>
+							<%
+								}
+								}
+							%>
+					</select></td>
 				</tr>
 				<tr>
 					<th>관리자No.</th>
-					<td><input type="text" name="mgr"></td>
+					<td><select name="mgr">
+							<%
+								if (mgr.size() == 0) {
+							%>
+							<option value="">:::관리자 없음:::</option>
+							<%
+								} else {
+									for (int i = 0; i < mgr.size(); i++) {
+										EmpDTO dto = mgr.get(i);
+							%>
+							<option value="<%=dto.getEmpno()%>">
+								<%=dto.getEname()%>[<%=dto.getEmpno()%>]
+							</option>
+							<%
+								}
+								}
+							%>
+					</select></td>
 				</tr>
 				<tr>
 					<th>급여</th>

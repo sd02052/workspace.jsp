@@ -148,4 +148,24 @@ public class MemberDAO {
 		}
 		return result;
 	}
+	
+	// 회원번호에 해당하는 회원을 DB에서 삭제하는 메서드
+	public int deleteMember(int num) {
+		int result = 0;
+		
+		try {
+			sql = "delete from member10 where num = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			
+			result = pstmt.executeUpdate();
+			
+			pstmt.close();
+			con.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

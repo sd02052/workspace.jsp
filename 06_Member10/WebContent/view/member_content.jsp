@@ -80,11 +80,9 @@
 			%>
 
 			<tr>
-				<td colspan="2" align="center"><input type="button"
-					value="회원수정"
-					onclick="location.href='update.do?num=<%=cont.getNum()%>'">
-					<input type="button" value="회원삭제"
-					onclick="if(confirm('삭제 하시겠습니까?)){
+				<td colspan="2" align="center">
+				<input type="button" value="회원수정" onclick="location.href='update.do?num=<%=cont.getNum()%>'">
+				<input type="button" value="회원삭제" onclick="if(confirm('삭제 하시겠습니까?)){
 						location.href='delete.do?num=<%=cont.getNum()%>'
 					} else{ return;}">
 				</td>

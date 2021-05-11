@@ -181,4 +181,27 @@ public class ProductDAO {
 		}
 		return result;
 	}
+
+	// 매개변수로 넘어온 제품번호에 해당하는 제품을 DB에서 삭제하는 메서드
+	public int deleteProduct(int no) {
+		int result = 0;
+
+		try {
+			openConn();
+			sql = "delete from products where pnum = ?";
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, no);
+			
+			result = pstmt.executeUpdate();
+			
+			pstmt.close();
+			con.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

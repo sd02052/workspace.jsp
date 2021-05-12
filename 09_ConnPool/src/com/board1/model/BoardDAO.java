@@ -1,4 +1,4 @@
-package com.board.model;
+package com.board1.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,6 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
+import com.board1.model.BoardDAO;
 
 public class BoardDAO {
 	Connection con = null; // DB 연결하는 객체
@@ -36,33 +43,32 @@ public class BoardDAO {
 		return instance;
 	}
 
-	// DB 연동하는 작업을 진행하는 메서드
+	// DB 연동하는 작업을 진행하는 메서드 - DBCP 방식으로 연결
 	public void openConn() {
-		String driver = "oracle.jdbc.driver.OracleDriver";
-		String url = "jdbc:oracle:thin:@localhost:1521:XE";
-		String user = "web";
-		String password = "1234";
-
 		try {
-			// 1단계 : 오라클 드라이버 로딩
-			Class.forName(driver);
+			// 1단계 : JNDI 서버 객체 생성
+			Context ctx = new InitialContext();
 
-			// 2단계 : DB(오라클)와 연결
-			con = DriverManager.getConnection(url, user, password);
+			// 2단계 : lookup() 메서드를 이용하여 매칭되는 커넥션을 찾는다.
+			DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/myoracle");
+
+			// 3단계 : DataSource 객체를 이용하여 커넥션 객체를 하나 가져온다.
+			con = ds.getConnection();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	// board 테이블의 전체 레코드를 조회하는 메서드
 	public List<BoardDTO> getBoardList() {
 		List<BoardDTO> list = new ArrayList<BoardDTO>();
 
 		try {
-			openConn();
+			openConn(); // DBCP 방식으로 연결
 
 			sql = "select * from board order by board_no desc";
+
 			pstmt = con.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
@@ -80,7 +86,6 @@ public class BoardDAO {
 
 				list.add(dto);
 			}
-
 			rs.close();
 			pstmt.close();
 			con.close();
@@ -91,12 +96,11 @@ public class BoardDAO {
 		return list;
 	}
 
-	public int insertBoard(BoardDTO dto) {
+	public int writeBoard(BoardDTO dto) {
 		int result = 0;
 
 		try {
 			openConn();
-
 			sql = "insert into board values(board_seq.nextval, ?, ?, ?, ?, default, sysdate)";
 			pstmt = con.prepareStatement(sql);
 
@@ -116,13 +120,11 @@ public class BoardDAO {
 		return result;
 	}
 
-	public void boardHit(int no) {
+	public void hitBoard(int no) {
 		try {
 			openConn();
-
 			sql = "update board set board_hit = board_hit + 1 where board_no = ?";
 			pstmt = con.prepareStatement(sql);
-
 			pstmt.setInt(1, no);
 
 			pstmt.executeUpdate();
@@ -135,7 +137,7 @@ public class BoardDAO {
 		}
 	}
 
-	public BoardDTO boardCont(int no) {
+	public BoardDTO contentBoard(int no) {
 		BoardDTO dto = new BoardDTO();
 
 		try {
@@ -148,7 +150,7 @@ public class BoardDAO {
 
 			rs = pstmt.executeQuery();
 
-			if (rs.next()) {
+			while (rs.next()) {
 				dto.setBoard_no(rs.getInt("board_no"));
 				dto.setBoard_writer(rs.getString("board_writer"));
 				dto.setBoard_title(rs.getString("board_title"));
@@ -174,16 +176,15 @@ public class BoardDAO {
 		try {
 			openConn();
 
-			sql = "select * from board where board_no = ?";
+			sql = "select * from board where board_no =?";
 			pstmt = con.prepareStatement(sql);
-
 			pstmt.setInt(1, dto.getBoard_no());
 
 			rs = pstmt.executeQuery();
 
-			if (rs.next()) {
-				if (dto.getBoard_pwd().equals(rs.getString("board_pwd"))) { // 비밀번호가 맞는 경우
-					sql = "update board set board_title = ?, board_cont = ? where board_no =?";
+			while (rs.next()) {
+				if (dto.getBoard_pwd().equals(rs.getString("board_pwd"))) {
+					sql = "update board set board_title = ?, board_cont = ? where board_no = ?";
 
 					pstmt = con.prepareStatement(sql);
 					pstmt.setString(1, dto.getBoard_title());
@@ -191,11 +192,11 @@ public class BoardDAO {
 					pstmt.setInt(3, dto.getBoard_no());
 
 					result = pstmt.executeUpdate();
-				} else { // 비밀번호가 틀린 경우
+
+				} else {
 					result = -1;
 				}
 			}
-
 			rs.close();
 			pstmt.close();
 			con.close();
@@ -215,24 +216,19 @@ public class BoardDAO {
 			sql = "select * from board where board_no = ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, no);
-
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				if (pwd.equals(rs.getString("board_pwd"))) {
 					sql = "delete from board where board_no = ?";
 					pstmt = con.prepareStatement(sql);
-					pstmt.setInt(1, no);
 
+					pstmt.setInt(1, no);
 					result = pstmt.executeUpdate();
 				} else {
 					result = -1;
 				}
 			}
-
-			rs.close();
-			pstmt.close();
-			con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -240,18 +236,17 @@ public class BoardDAO {
 		return result;
 	}
 
-	public List<BoardDTO> searchBoard(String find_field, String find_name) {
+	public List<BoardDTO> searchBoard(String type, String name) {
 		List<BoardDTO> list = new ArrayList<BoardDTO>();
 
 		openConn();
 
-		if (find_field.equals("title")) { // 글 제목으로 검색한 경우
+		if (type.equals("title")) {
 
 			try {
 				sql = "select * from board where board_title like ? order by board_no desc";
 				pstmt = con.prepareStatement(sql);
-
-				pstmt.setString(1, "%" + find_name + "%");
+				pstmt.setString(1, "%" + name + "%");
 
 				rs = pstmt.executeQuery();
 
@@ -275,12 +270,12 @@ public class BoardDAO {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (find_field.equals("content")) { // 글 내용으로 검색한 경우
+		} else if (type.equals("content")) {
+
 			try {
 				sql = "select * from board where board_cont like ? order by board_no desc";
 				pstmt = con.prepareStatement(sql);
-
-				pstmt.setString(1, "%" + find_name + "%");
+				pstmt.setString(1, "%" + name + "%");
 
 				rs = pstmt.executeQuery();
 
@@ -304,13 +299,13 @@ public class BoardDAO {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (find_field.equals("title_content")) { // 제목+내용으로 검색한 경우
+		} else {
+
 			try {
 				sql = "select * from board where board_title like ? or board_cont like ? order by board_no desc";
 				pstmt = con.prepareStatement(sql);
-
-				pstmt.setString(1, "%" + find_name + "%");
-				pstmt.setString(2, "%" + find_name + "%");
+				pstmt.setString(1, "%" + name + "%");
+				pstmt.setString(2, "%" + name + "%");
 
 				rs = pstmt.executeQuery();
 
@@ -338,4 +333,56 @@ public class BoardDAO {
 		return list;
 	}
 
+	public List<BoardDTO> getList(int startRow, int endRow) {
+		List<BoardDTO> list = new ArrayList<BoardDTO>();
+		openConn();
+		sql = "select * from "
+				+ "(select rownum rn, board_no, board_writer, board_title, board_cont, board_pwd, board_hit, board_regdate from "
+				+ "(select * from board order by board_no desc)) where rn between ? and ?";
+
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, endRow);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				BoardDTO dto = new BoardDTO();
+
+				dto.setBoard_no(rs.getInt("board_no"));
+				dto.setBoard_writer(rs.getString("board_writer"));
+				dto.setBoard_title(rs.getString("board_title"));
+				dto.setBoard_cont(rs.getString("board_cont"));
+				dto.setBoard_pwd(rs.getString("board_pwd"));
+				dto.setBoard_hit(rs.getInt("board_hit"));
+				dto.setBoard_regdate(rs.getString("board_regdate"));
+
+				list.add(dto);
+			}
+			rs.close();
+			pstmt.close();
+			con.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	public int getCount() {
+		int count = 0;
+		openConn();
+		sql = "select count(*) from board";
+		try {
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count; // 총 레코드 수 리턴
+	}
 }

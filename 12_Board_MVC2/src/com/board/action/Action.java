@@ -1,4 +1,4 @@
-package com.member.action;
+package com.board.action;
 
 import java.io.IOException;
 
@@ -7,6 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface Action {
 	
-	// 추상메서드
+	// 추상 메서드
 	String execute(HttpServletRequest request, HttpServletResponse response) throws IOException;
 }

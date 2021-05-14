@@ -37,6 +37,20 @@ public class FrontController extends HttpServlet {
 
 		if (command.equals("select.do")) {
 			action = new MemberListAction();
+		} else if (command.equals("insert.do")) {
+			action = new MemberJoinAction();
+		} else if (command.equals("insertOk.do")) {
+			action = new MemberJoinOkAction();
+		} else if (command.equals("content.do")) {
+			action = new MemberContentAction();
+		} else if (command.equals("update.do")) {
+			action = new MemberUpdateAction();
+		} else if (command.equals("updateOk.do")) {
+			action = new MemberUpdateOkAction();
+		} else if (command.equals("delete.do")) {
+			action = new MemberDeleteAction();
+		} else if (command.equals("deleteOk.do")) {
+			action = new MemberDeleteOkAction();
 		}
 
 		String path1 = action.execute(request, response);

@@ -92,4 +92,137 @@ public class MemberDAO {
 		}
 		return list;
 	}
+
+	public int insertMember(MemberDTO dto) {
+		int result = 0;
+
+		try {
+			openConn();
+
+			sql = "insert into member10 values(member10_seq.nextval,?,?,?,?,?,?,?,sysdate)";
+			pstmt = con.prepareStatement(sql);
+
+			pstmt.setString(1, dto.getMemid());
+			pstmt.setString(2, dto.getMemname());
+			pstmt.setString(3, dto.getPwd());
+			pstmt.setInt(4, dto.getAge());
+			pstmt.setInt(5, dto.getMileage());
+			pstmt.setString(6, dto.getJob());
+			pstmt.setString(7, dto.getAddr());
+
+			result = pstmt.executeUpdate();
+
+			pstmt.close();
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public MemberDTO contentMember(int no) {
+		MemberDTO dto = new MemberDTO();
+
+		try {
+			openConn();
+
+			sql = "select * from member10 where num = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, no);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				dto.setNum(rs.getInt("num"));
+				dto.setMemid(rs.getString("memid"));
+				dto.setMemname(rs.getString("memname"));
+				dto.setPwd(rs.getString("pwd"));
+				dto.setAge(rs.getInt("age"));
+				dto.setMileage(rs.getInt("mileage"));
+				dto.setJob(rs.getString("job"));
+				dto.setAddr(rs.getString("addr"));
+				dto.setRegdate(rs.getString("regdate"));
+			}
+
+			rs.close();
+			pstmt.close();
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
+	public int updateMember(MemberDTO dto) {
+		int result = 0;
+
+		try {
+			openConn();
+
+			sql = "select * from member10 where num =?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, dto.getNum());
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				if (dto.getPwd().equals(rs.getString("pwd"))) {
+					sql = "update member10 set age = ?, mileage = ?, job = ?, addr = ? where num = ?";
+					pstmt = con.prepareStatement(sql);
+					pstmt.setInt(1, dto.getAge());
+					pstmt.setInt(2, dto.getMileage());
+					pstmt.setString(3, dto.getJob());
+					pstmt.setString(4, dto.getAddr());
+					pstmt.setInt(5, dto.getNum());
+
+					result = pstmt.executeUpdate();
+				} else {
+					result = -1;
+				}
+			}
+			rs.close();
+			pstmt.close();
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public int deleteMember(int num, String pwd) {
+		int result = 0;
+
+		try {
+			openConn();
+
+			sql = "select * from member10 where num = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				if (pwd.equals(rs.getString("pwd"))) {
+					sql = "delete from member10 where num =?";
+					pstmt = con.prepareStatement(sql);
+
+					pstmt.setInt(1, num);
+
+					result = pstmt.executeUpdate();
+				} else {
+					result = -1;
+				}
+			}
+			rs.close();
+			pstmt.close();
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

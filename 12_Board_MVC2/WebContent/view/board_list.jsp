@@ -8,43 +8,40 @@
 <title>Insert title here</title>
 </head>
 <body>
-
 	<div align="center">
-		<hr width="50%" color="red">
-		<h3>MEMBER10 테이블 전체 회원 리스트</h3>
-		<hr width="50%" color="red">
+		<hr width="50%" color="gray">
+		<h3>BOARD 테이블 전체 게시물 리스트</h3>
+		<hr width="50%" color="gray">
 		<br> <br>
 
 		<table border="1" cellspacing="0" width="400">
 			<tr>
-				<th>번호</th>
-				<th>회원ID</th>
-				<th>회원명</th>
-				<th>가입일자</th>
+				<th>글번호</th>
+				<th>글제목</th>
+				<th>조회수</th>
+				<th>작성일자</th>
 			</tr>
 			<c:set var="list" value="${List }" />
 			<c:if test="${!empty list }">
 				<c:forEach items="${list }" var="dto">
 					<tr>
-						<td>${dto.getNum() }</td>
-						<td>${dto.getMemid() }</td>
-						<td><a href="<%=request.getContextPath() %>/content.do?num=${dto.getNum()}">
-						${dto.getMemname() }</a></td>
-						<td>${dto.getRegdate().substring(0,10) }</td>
+						<td>${dto.getBoard_no() }</td>
+						<td>${dto.getBoard_title() }</td>
+						<td>${dto.getBoard_hit() }</td>
+						<td>${dto.getBoard_regdate().substring(0,10) }</td>
 					</tr>
 				</c:forEach>
 			</c:if>
 			<c:if test="${empty list }">
 				<tr>
 					<td colspan="4" align="center">
-						<h3>검색된 회원 리스트가 없습니다.</h3>
+						<h3>검색된 게시물이 없습니다.</h3>
 					</td>
 				</tr>
 			</c:if>
-			
 			<tr>
 				<td colspan="4" align="right">
-					<input type="button" value="회원등록" onclick="location.href='insert.do'">
+					<input type="button" value="게시글 등록" onclick="location.href='<%=request.getContextPath() %>/board_write.do'">
 				</td>
 			</tr>
 		</table>

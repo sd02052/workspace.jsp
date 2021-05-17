@@ -30,8 +30,20 @@ public class FrontController extends HttpServlet {
 			action = new BoardListAction();
 		} else if (command.equals("board_write.do")) {
 			action = new BoardWriteAction();
-		} else if ( command.equals("board_write_ok.do")) {
+		} else if (command.equals("board_write_ok.do")) {
 			action = new BoardWriteOkAction();
+		} else if (command.equals("board_cont.do")) {
+			action = new BoardContAction();
+		} else if (command.equals("board_update.do")) {
+			action = new BoardUpdateAction();
+		} else if (command.equals("board_update_ok.do")) {
+			action = new BoardUpdateOkAction();
+		} else if (command.equals("board_delete.do")) {
+			action = new BoardDeleteAction();
+		} else if (command.equals("board_delete_ok.do")) {
+			action = new BoardDeleteOkAction();
+		} else if ( command.equals("board_search.do")) {
+			action = new BoardSearchAction();
 		}
 
 		String path1 = action.execute(request, response);

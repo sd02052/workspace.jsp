@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,12 +8,14 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<c:set var="list" value="${search }" />
+	<c:set var="target" value="${target }" />
 	<div align="center">
-		<hr width="50%" color="gray">
-		<h3>BOARD 테이블 전체 게시물 리스트</h3>
-		<hr width="50%" color="gray">
+		<hr width="50%" color="orange">
+		<h3>"${target }" 검색 결과</h3>
+		<hr width="50%" color="orange">
 		<br> <br>
-
+		
 		<table border="1" cellspacing="0" width="400">
 			<tr>
 				<th>글번호</th>
@@ -21,7 +23,6 @@
 				<th>조회수</th>
 				<th>작성일자</th>
 			</tr>
-			<c:set var="list" value="${List }" />
 			<c:if test="${!empty list }">
 				<c:forEach items="${list }" var="dto">
 					<tr>
@@ -42,22 +43,10 @@
 			</c:if>
 			<tr>
 				<td colspan="4" align="right">
-					<input type="button" value="게시글 등록" onclick="location.href='<%=request.getContextPath() %>/board_write.do'">
+					<input type="button" value="전체목록" onclick="location.href='board_list.do'">
 				</td>
 			</tr>
 		</table>
-		<br>
-		<form method="post" action="<%=request.getContextPath() %>/board_search.do">
-			<select name="search_field">
-				<option value="title">제목</option>
-				<option value="content">내용</option>
-				<option value="title_content">제목+내용</option>
-				<option value="writer">작성자</option>
-			</select>
-			
-			<input type="text" name="search_name">
-			<input type="submit" value="검색">
-		</form>
 	</div>
 </body>
 </html>

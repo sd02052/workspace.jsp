@@ -31,6 +31,33 @@ public class FrontController extends HttpServlet {
 			action = new BoardListAction();
 			action.execute(request, response);
 			viewPage = "view/board_list.jsp";
+		} else if (command.equals("board_write.do")) { // 데이터를 가져올 필요가 없다
+			viewPage = "view/board_write.jsp"; // 바로 페이지 이동해주면 된다.
+		} else if (command.equals("board_write_ok.do")) {
+			action = new BoardWriteOkAction();
+			action.execute(request, response);
+		} else if (command.equals("board_cont.do")) {
+			action = new BoardContAction();
+			action.execute(request, response);
+			viewPage = "view/board_cont.jsp";
+		} else if (command.equals("board_update.do")) {
+			action = new BoardUpdateAction();
+			action.execute(request, response);
+			viewPage = "view/board_update.jsp";
+		} else if(command.equals("board_update_ok.do")) {
+			action = new BoardUpdateOkAction();
+			action.execute(request, response);
+		} else if(command.equals("board_delete.do")) {
+			action = new BoardDeleteAction();
+			action.execute(request, response);
+			viewPage = "view/board_delete.jsp";
+		} else if (command.equals("board_delete_ok.do")) {
+			action = new BoardDeleteOkAction();
+			action.execute(request, response);
+		} else if(command.equals("board_search.do")) {
+			action = new BoardSearchAction();
+			action.execute(request, response);
+			viewPage = "view/board_search.jsp";
 		}
 
 		RequestDispatcher rd = request.getRequestDispatcher(viewPage);

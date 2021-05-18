@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,9 +10,9 @@
 <body>
 
 	<div align="center">
-		<hr width="50%" color="red">
-		<h3>BOARD 테이블 게시물 전체 리스트</h3>
-		<hr width="50%" color="red">
+		<hr width="50%" color="blue">
+		<h3>"${name }" 검색 결과 폼</h3>
+		<hr width="50%" color="blue">
 		<br> <br>
 		
 		<table border="1" cellspacing="0" width="500">
@@ -41,44 +41,29 @@
 					</td>
 				</tr>
 			</c:if>
-			<tr>
-				<td colspan="4" align="right">
-					<input type="button" value="글쓰기" onclick="location.href='board_write.do'">
-				</td>
-			</tr>
 		</table>
 		<br>
 		
 		<c:if test="${page > block }">
-			<a href="board_list.do?page=1">◀◀</a>
-			<a href="board_list.do?page=${startBlock - 1 }">◀</a>
+			<a href="board_search.do?page=1&search_field=${field }&search_name=${name }">◀◀</a>
+			<a href="board_search.do?page=${startBlock - 1 }&search_field=${field }&search_name=${name }">◀</a>
 		</c:if>
 		<c:forEach begin="${startBlock }" end="${endBlock }" var="i">
 			<c:if test="${i == page }">
-				<b><a href="board_list.do?page=${i }">[${i }]</a></b>
+				<b><a href="board_search.do?page=${i }&search_field=${field }&search_name=${name }">[${i }]</a></b>
 			</c:if>
 			
 			<c:if test="${i != page }">
-				<a href="board_list.do?page=${i }">[${i }]</a>
+				<a href="board_search.do?page=${i }&search_field=${field }&search_name=${name }">[${i }]</a>
 			</c:if>
 		</c:forEach>
 		
 		<c:if test="${endBlock < allPage }">
-			<a href="board_list.do?page=${endBlock+1 }">▶</a>
-			<a href="board_list.do?page=${allPage }">▶▶</a>
+			<a href="board_search.do?page=${endBlock+1 }&search_field=${field }&search_name=${name }">▶</a>
+			<a href="board_search.do?page=${allPage }&search_field=${field }&search_name=${name }">▶▶</a>
 		</c:if>
 		<br><br>
-		
-		<form method="post" action="<%=request.getContextPath() %>/board_search.do">
-			<select name="search_field">
-				<option value="title">제목</option>
-				<option value="content">내용</option>
-				<option value="title_content">제목+내용</option>
-				<option value="writer">작성자</option>
-			</select>
-			<input type="text" name="search_name">
-			<input type="submit" value="검색">
-		</form>
+		<input type="button" value="전체목록" onclick="location.href='board_list.do?page=1'">
 	</div>
 </body>
 </html>

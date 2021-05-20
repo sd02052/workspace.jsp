@@ -27,7 +27,7 @@
 				<c:forEach items="${list}" var="dto">
 					<tr>
 						<td> ${dto.getBoard_no() }</td>
-						<td> <a href="<%=request.getContextPath() %>/board_cont.do?no=${dto.getBoard_no() }&page=${page }">
+						<td> <a href="<%=request.getContextPath() %>/board_searchCont.do?no=${dto.getBoard_no() }&page=${page }&field=${field }&name=${name }">
 						 ${dto.getBoard_title() }</a></td>
 						<td> ${dto.getBoard_hit() }</td>
 						<td> ${dto.getBoard_regdate().substring(0,10) }</td>

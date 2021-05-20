@@ -13,15 +13,15 @@ package com.reply.action;
  */
 public class ActionForward {
 
-	private boolean ieRedirect;
+	private boolean isRedirect;
 	private String path;
 
-	public boolean isIeRedirect() {
-		return ieRedirect;
+	public boolean isRedirect() {
+		return isRedirect;
 	}
 
-	public void setIeRedirect(boolean ieRedirect) {
-		this.ieRedirect = ieRedirect;
+	public void setRedirect(boolean isRedirect) {
+		this.isRedirect = isRedirect;
 	}
 
 	public String getPath() {

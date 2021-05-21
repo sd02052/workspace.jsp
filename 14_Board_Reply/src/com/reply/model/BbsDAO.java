@@ -239,15 +239,100 @@ public class BbsDAO {
 		return result;
 	}
 
-	public int deleteBbs(int no) {
-		int result = 0;
+	public int deleteBbs(int no, int group) {
+		int result = 0, count = 0;
 
 		try {
 			openConn();
 
-			sql = "delete from jsp_bbs where board_no =?";
+			sql = "select count(*) from jsp_bbs where board_group = ? and board_step > ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, group);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+
+			if (count > 0) {
+				result = -1;
+			} else {
+				sql = "delete from jsp_bbs where board_no = ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setInt(1, no);
+
+				result = pstmt.executeUpdate();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return result;
+	}
+
+	public void updateNo(int no) {
+		try {
+			openConn();
+
+			sql = "update jsp_bbs set board_no = board_no - 1, board_group = board_group - 1 where board_no > ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, no);
+
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+	}
+
+	// jsp_bbs 테이블 게시판 답변 글의 step을 하나 증가시키는 메서드
+	public void replyUpdate(int group, int step) {
+		try {
+			openConn();
+
+			sql = "update jsp_bbs set board_step = board_step + 1 where board_group = ? and board_step > ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, group);
+			pstmt.setInt(2, step);
+
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+	}
+
+	// jsp_bbs 테이블의 게시글 원글에 답변글을 추가하는 메서드
+	public int replyBbs(BbsDTO dto) {
+		int result = 0, count = 0;
+
+		try {
+			openConn();
+
+			sql = "select count(*) from jsp_bbs";
+			pstmt = con.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1) + 1;
+			}
+
+			sql = "insert into jsp_bbs values(?, ?, ?, ?, ?, default, sysdate, ?, ?, ?)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, count);
+			pstmt.setString(2, dto.getBoard_writer());
+			pstmt.setString(3, dto.getBoard_title());
+			pstmt.setString(4, dto.getBoard_cont());
+			pstmt.setString(5, dto.getBoard_pwd());
+			pstmt.setInt(6, dto.getBoard_group());
+			pstmt.setInt(7, dto.getBoard_step() + 1);
+			pstmt.setInt(8, dto.getBoard_indent() + 1);
 
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {

@@ -30,8 +30,12 @@
 				<c:forEach items="${list}" var="dto">
 					<tr>
 						<td> ${dto.getBoard_no() }</td>
-						<td> <a href="<%=request.getContextPath() %>/bbs_cont.do?no=${dto.getBoard_no() }&page=${page }">
-						 ${dto.getBoard_title() }</a></td>
+						<td> 
+							<c:forEach begin="1" end="${dto.getBoard_indent() }">
+							&nbsp;
+							</c:forEach>
+						<a href="<%=request.getContextPath() %>/bbs_cont.do?no=${dto.getBoard_no() }&page=${page }">
+						${dto.getBoard_title() }</a></td>
 						<td> ${dto.getBoard_hit() }</td>
 						<td> ${dto.getBoard_date().substring(0,10) }</td>
 						<td> ${dto.getBoard_group() }</td>

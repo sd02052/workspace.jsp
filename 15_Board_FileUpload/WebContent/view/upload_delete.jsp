@@ -8,23 +8,19 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<c:set var="dto" value="${delete }"></c:set>
+
 	<div align="center">
-		<hr width="50%" color="blue">
-		<h3>${dto.getBoard_writer() }님 게시물 삭제 폼</h3>
-		<hr width="50%" color="blue">
+		<hr width="50%" color="gray">
+		<h3>UPLOAD 게시판 자료실 게시물 삭제 폼</h3>
+		<hr width="50%" color="gray">
 		<br> <br>
 		
-		<form method="post" action="<%=request.getContextPath() %>/bbs_delete_ok.do">
-			<input type="hidden" name="no" value="${dto.getBoard_no() }">
-			<input type="hidden" name="page" value="${page }">
-			<input type="hidden" name="db_pwd" value="${dto.getBoard_pwd() }">
-			<input type="hidden" name="group" value="${dto.getBoard_group() }">
-			<input type="hidden" name="step" value="${dto.getBoard_step() }">
+		<form method="post" action="<%=request.getContextPath() %>/upload_delete_ok.do">
+			<input type="hidden" name="no" value="${no }">
 			<table border="1" cellspacing="0" width="350">
 				<tr>
 					<th>삭제할 비밀번호</th>
-					<td><input type="password" name="pwd"></td>
+					<td> <input type="password" name="pwd"></td>
 				</tr>
 				<tr>
 					<td colspan="2" align="center">

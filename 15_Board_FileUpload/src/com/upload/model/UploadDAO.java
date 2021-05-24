@@ -130,4 +130,108 @@ public class UploadDAO {
 		}
 		return result;
 	}
+
+	public void uploadHit(int no) {
+		try {
+			openConn();
+
+			sql = "update upload set upload_hit = upload_hit + 1 where upload_no = ?";
+			pstmt = con.prepareStatement(sql);
+
+			pstmt.setInt(1, no);
+
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+	}
+
+	public UploadDTO uploadContent(int no) {
+		UploadDTO dto = new UploadDTO();
+
+		try {
+			openConn();
+
+			sql = "select * from upload where upload_no =?";
+			pstmt = con.prepareStatement(sql);
+
+			pstmt.setInt(1, no);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				dto.setUpload_no(rs.getInt("upload_no"));
+				dto.setUpload_writer(rs.getString("upload_writer"));
+				dto.setUpload_title(rs.getString("upload_title"));
+				dto.setUpload_cont(rs.getString("upload_cont"));
+				dto.setUpload_pwd(rs.getString("upload_pwd"));
+				dto.setUpload_file(rs.getString("upload_file"));
+				dto.setUpload_hit(rs.getInt("upload_hit"));
+				dto.setUpload_date(rs.getString("upload_date"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return dto;
+	}
+
+	public int updateUpload(UploadDTO dto) {
+		int result = 0;
+
+		try {
+			openConn();
+
+			sql = "select * from upload where upload_no = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, dto.getUpload_no());
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				if (dto.getUpload_pwd().equals(rs.getString("upload_pwd"))) {
+					sql = "update upload set upload_title = ?, upload_cont = ?, upload_file = ? where upload_no = ?";
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, dto.getUpload_title());
+					pstmt.setString(2, dto.getUpload_cont());
+					pstmt.setString(3, dto.getUpload_file());
+					pstmt.setInt(4, dto.getUpload_no());
+
+					result = pstmt.executeUpdate();
+				} else {
+					result = -1;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return result;
+	}
+	
+	public int uploadDelete(int no) {
+		int result = 0;
+		
+		try {
+			openConn();
+			
+			sql = "delete from upload where upload_no = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return result;
+	}
 }

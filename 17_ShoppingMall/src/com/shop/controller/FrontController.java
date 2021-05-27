@@ -43,9 +43,9 @@ public class FrontController extends HttpServlet {
 		 * 끝나게 함. - InputStream에 Properties 파일을 인자로 넣어서 그 스트림으로부터 파일을 가져올 때 가장 많이 사용을 함.
 		 * 인자로 들어온 Properties 파일을 읽게 됨. - 읽어들일 때 사용하는 메서드는 load() 메서드를 이용하여 파일을 읽어들이게 됨.
 		 */
-
+		
 		FileInputStream fis = new FileInputStream(
-				"C:\\Users\\SOS\\git\\workspace.jsp\\17_ShoppingMall\\src\\com\\shop\\controller\\mapping.properties");
+				"C:\\Users\\sist\\git\\workspace.jsp\\17_ShoppingMall\\src\\com\\shop\\controller\\mapping.properties");
 		prop.load(fis);
 		String value = prop.getProperty(command);
 		System.out.println("value >>> " + value);

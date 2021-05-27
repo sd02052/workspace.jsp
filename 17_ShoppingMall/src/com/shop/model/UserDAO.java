@@ -4,28 +4,26 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-public class CategoryDAO {
+public class UserDAO {
 	Connection con = null; // DB 연결하는 객체
 	PreparedStatement pstmt = null; // DB에 sql문을 전송하는 객체
 	ResultSet rs = null; // sql문을 실행 후 결과값을 가지고 있는 객체
 	String sql = null; // 쿼리문을 저장할 객체
 
-	private static CategoryDAO instance = null;
+	private static UserDAO instance = null;
 
-	private CategoryDAO() {
+	private UserDAO() {
 
 	}
 
-	public static CategoryDAO getInstance() {
+	public static UserDAO getInstance() {
 		if (instance == null) {
-			instance = new CategoryDAO();
+			instance = new UserDAO();
 		}
 		return instance;
 	}
@@ -65,76 +63,26 @@ public class CategoryDAO {
 		}
 	}
 
-	public int insertCategory(String code, String name) {
-		int result = 0, count = 0;
-
-		try {
-			openConn();
-
-			sql = "select count(*) from shop_category";
-			pstmt = con.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				count = rs.getInt(1) + 1;
-			}
-
-			sql = "insert into shop_category values(?, ?, ?)";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, count);
-			pstmt.setString(2, code);
-			pstmt.setString(3, name);
-
-			result = pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			closeConn(rs, pstmt, con);
-		}
-		return result;
-	}
-
-	public List<CategoryDTO> getCategoryList() {
-		List<CategoryDTO> list = new ArrayList<CategoryDTO>();
-
-		try {
-			openConn();
-
-			sql = "select * from shop_category order by category_num desc";
-			pstmt = con.prepareStatement(sql);
-
-			rs = pstmt.executeQuery();
-
-			while (rs.next()) {
-				CategoryDTO dto = new CategoryDTO();
-				dto.setCategory_num(rs.getInt("category_num"));
-				dto.setCategory_code(rs.getString("category_code"));
-				dto.setCategory_name(rs.getString("category_name"));
-
-				list.add(dto);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			closeConn(rs, pstmt, con);
-		}
-		return list;
-	}
-
-	public int deleteCategory(int num) {
+	public int userCheck(String id, String pwd) {
 		int result = 0;
 
 		try {
 			openConn();
 
-			sql = "delete from shop_category where category_num = ?";
+			sql = "select * from member10 where memid = ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, num);
+			pstmt.setString(1, id);
 
-			result = pstmt.executeUpdate();
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				if (pwd.equals(rs.getString("pwd"))) {
+					result = 1;
+				} else { // 비밀번호가 틀린 경우
+					result = -1;
+				}
+			} else { // 회원 아이디가 없는 경우(회원이 아닌 경우)
+				result = -2;
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -144,20 +92,35 @@ public class CategoryDAO {
 		return result;
 	}
 
-	public void updateCategoryNo(int num) {
+	public UserDTO getMember(String id) {
+		UserDTO dto = new UserDTO();
+
 		try {
 			openConn();
 
-			sql = "update shop_category set category_num = category_num - 1 where category_num > ?";
+			sql = "select * from member10 where memid = ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, num);
+			pstmt.setString(1, id);
 
-			pstmt.executeUpdate();
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				dto.setNum(rs.getInt("num"));
+				dto.setMemid(rs.getString("memid"));
+				dto.setMemname(rs.getString("memname"));
+				dto.setPwd(rs.getString("pwd"));
+				dto.setAge(rs.getInt("age"));
+				dto.setMileage(rs.getInt("mileage"));
+				dto.setJob(rs.getString("job"));
+				dto.setAddr(rs.getString("addr"));
+				dto.setRegdate(rs.getString("regdate"));
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			closeConn(rs, pstmt, con);
 		}
+		return dto;
 	}
 }

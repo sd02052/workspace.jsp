@@ -137,4 +137,122 @@ public class ProductDAO {
 		}
 		return list;
 	}
+
+	public ProductDTO productCont(int num) {
+		ProductDTO dto = new ProductDTO();
+
+		try {
+			openConn();
+
+			sql = "select * from shop_products where pnum = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPname(rs.getString("pname"));
+				dto.setPcategory_fk(rs.getString("pcategory_fk"));
+				dto.setPcompany(rs.getString("pcompany"));
+				dto.setPimage(rs.getString("pimage"));
+				dto.setPqty(rs.getInt("pqty"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setPspec(rs.getString("pspec"));
+				dto.setPcontents(rs.getString("pcontents"));
+				dto.setPoint(rs.getInt("point"));
+				dto.setPinputdate(rs.getString("pinputdate"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return dto;
+	}
+
+	public int updateProduct(ProductDTO dto) {
+		int result = 0;
+
+		try {
+			openConn();
+
+			sql = "update shop_products set pcompany = ?, pimage = ?, pqty = ?, "
+					+ "price= ?, pspec = ?, pcontents = ?, point = ?, pinputdate = sysdate where pnum = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, dto.getPcompany());
+			pstmt.setString(2, dto.getPimage());
+			pstmt.setInt(3, dto.getPqty());
+			pstmt.setInt(4, dto.getPrice());
+			pstmt.setString(5, dto.getPspec());
+			pstmt.setString(6, dto.getPcontents());
+			pstmt.setInt(7, dto.getPoint());
+			pstmt.setInt(8, dto.getPnum());
+
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return result;
+	}
+
+	public int deleteProduct(int num) {
+		int result = 0;
+
+		try {
+			openConn();
+
+			sql = "delete from shop_products where pnum = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return result;
+	}
+
+	public List<ProductDTO> getProductLists(String code) {
+		List<ProductDTO> list = new ArrayList<ProductDTO>();
+
+		try {
+			openConn();
+
+			sql = "select * from shop_products where pcategory_fk = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, code);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ProductDTO dto = new ProductDTO();
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPname(rs.getString("pname"));
+				dto.setPcategory_fk(rs.getString("pcategory_fk"));
+				dto.setPcompany(rs.getString("pcompany"));
+				dto.setPimage(rs.getString("pimage"));
+				dto.setPqty(rs.getInt("pqty"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setPspec(rs.getString("pspec"));
+				dto.setPcontents(rs.getString("pcontents"));
+				dto.setPoint(rs.getInt("point"));
+				dto.setPinputdate(rs.getString("pinputdate"));
+
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return list;
+	}
 }

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.shop.controller.Action;
 import com.shop.controller.ActionForward;
 import com.shop.model.CategoryDAO;
-import com.shop.model.CaterogyDTO;
+import com.shop.model.CategoryDTO;
 
 public class AdminProdInputAction implements Action {
 
@@ -17,7 +17,7 @@ public class AdminProdInputAction implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// 카테고리 전체 목록을 상품 등록 페이지(view page)에 전달하는 컨트롤러 클래스.
 		CategoryDAO dao = CategoryDAO.getInstance();
-		List<CaterogyDTO> list = dao.getCategoryList();
+		List<CategoryDTO> list = dao.getCategoryList();
 
 		request.setAttribute("categoryList", list);
 

@@ -21,7 +21,7 @@ public class UploadWriteOkAction implements Action {
 		UploadDTO dto = new UploadDTO();
 
 		// 첨부파일이 저장될 경로(위치)
-		String saveFolder = "C:\\NCS\\workspace(jsp)\\15_Board_FileUpload\\WebContent\\upload";
+		String saveFolder = "C:\\Users\\SOS\\git\\workspace.jsp\\15_Board_FileUpload\\WebContent\\upload";
 
 		// 첨부파일의 최대 크기
 		int fileSize = 10 * 1024 * 1024; // 10MB

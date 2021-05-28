@@ -27,7 +27,7 @@
 				<c:forEach items="${list}" var="dto">
 					<tr>
 						<td> ${dto.getUpload_no() }</td>
-						<td> <a href="<%=request.getContextPath() %>/upload_cont.do?no=${dto.getUpload_no() }&page=${page }">
+						<td> <a href="<%=request.getContextPath() %>/upload_cont.do?no=${dto.getUpload_no() }">
 						${dto.getUpload_title() }</a></td>
 						<td> ${dto.getUpload_hit() }</td>
 						<td> ${dto.getUpload_date().substring(0,10) }</td>

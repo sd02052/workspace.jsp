@@ -239,15 +239,17 @@ public class BbsDAO {
 		return result;
 	}
 
-	public int deleteBbs(int no, int group) {
+	public int deleteBbs(BbsDTO dto) {
 		int result = 0, count = 0;
 
 		try {
 			openConn();
 
-			sql = "select count(*) from jsp_bbs where board_group = ? and board_step > ?";
+			sql = "select count(*) from jsp_bbs where board_no > ? and board_group = ? and board_step > ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, group);
+			pstmt.setInt(1, dto.getBoard_no());
+			pstmt.setInt(2, dto.getBoard_group());
+			pstmt.setInt(3, dto.getBoard_step());
 
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -259,7 +261,7 @@ public class BbsDAO {
 			} else {
 				sql = "delete from jsp_bbs where board_no = ?";
 				pstmt = con.prepareStatement(sql);
-				pstmt.setInt(1, no);
+				pstmt.setInt(1, dto.getBoard_no());
 
 				result = pstmt.executeUpdate();
 			}

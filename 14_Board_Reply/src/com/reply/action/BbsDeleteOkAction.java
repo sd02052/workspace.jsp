@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.reply.model.BbsDAO;
+import com.reply.model.BbsDTO;
 
 public class BbsDeleteOkAction implements Action {
 
@@ -17,13 +18,20 @@ public class BbsDeleteOkAction implements Action {
 		String db_pwd = request.getParameter("db_pwd").trim();
 		String board_pwd = request.getParameter("pwd").trim();
 		int board_group = Integer.parseInt(request.getParameter("group").trim());
+		int board_step = Integer.parseInt(request.getParameter("step").trim());
+		
+		BbsDTO dto = new BbsDTO();
+		dto.setBoard_no(board_no);
+		dto.setBoard_pwd(board_pwd);
+		dto.setBoard_group(board_group);
+		dto.setBoard_step(board_step);
 		
 		PrintWriter out = response.getWriter();
 		ActionForward forward = new ActionForward();
 
 		if (db_pwd.equals(board_pwd)) {
 			BbsDAO dao = BbsDAO.getInstance();
-			int res = dao.deleteBbs(board_no, board_group);
+			int res = dao.deleteBbs(dto);
 
 			if (res > 0) {
 				dao.updateNo(board_no);

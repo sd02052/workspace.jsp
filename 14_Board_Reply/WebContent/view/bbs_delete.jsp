@@ -20,6 +20,7 @@
 			<input type="hidden" name="page" value="${page }">
 			<input type="hidden" name="db_pwd" value="${dto.getBoard_pwd() }">
 			<input type="hidden" name="group" value="${dto.getBoard_group() }">
+			<input type="hidden" name="step" value="${dto.getBoard_step() }">
 			<table border="1" cellspacing="0" width="350">
 				<tr>
 					<th>삭제할 비밀번호</th>

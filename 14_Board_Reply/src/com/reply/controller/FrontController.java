@@ -40,7 +40,7 @@ public class FrontController extends HttpServlet {
 
 		Properties prop = new Properties();
 		/*
-		 * java.util.Properties 클래스 - Properties 클래스는 HashTable의 하위 클래스. - 보통은 환경 변수 및
+		 * java.util.Properties 클래스 - Properties 클래스는 HashTable의 하위 클래스. - 보통은 환경 변sql수 및
 		 * 속성 값을 Properties 파일에 저장하여 쉽게 접근할 수 있는 장점이 있음. - Properties 파일은 일련의
 		 * 키(key)-값(value)의 한 쌍으로 이루어져 있음. - 보통은 파일에 저장하여 사용을 함. 파일 이름을 *.properties으로
 		 * 끝나게 함. - InputStream에 Properties 파일을 인자로 넣어서 그 스트림으로부터 파일을 가져올 때 가장 많이 사용을 함.
@@ -48,7 +48,7 @@ public class FrontController extends HttpServlet {
 		 */
 
 		FileInputStream fis = new FileInputStream(
-				"C:\\Users\\SOS\\git\\workspace.jsp\\14_Board_Reply\\src\\com\\reply\\controller\\mapping.properties");
+				"C:\\Users\\sd020\\git\\workspace.jsp\\14_Board_Reply\\src\\com\\reply\\controller\\mapping.properties");
 		prop.load(fis);
 		String value = prop.getProperty(command);
 		System.out.println("value >>> " + value);

@@ -19,7 +19,7 @@ public class AdminProdEditOkAction implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// 상품 수정 폼 페이지에서 넘오언 데이터들을 DB에 저장하는 컨트롤러 클래스
 		// 첨부파일이 저장될 위치(경로) 설정
-		String saveFolder = "C:\\NCS\\workspace(jsp)\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\17_ShoppingMall\\upload";
+		String saveFolder = "C:\\Users\\sd020\\NCS\\jsp.workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\17_ShoppingMall\\upload";
 
 		// 첨부파일 용량(크기) 제한
 		int fileSize = 5 * 1024 * 1024;

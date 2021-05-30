@@ -8,8 +8,8 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script type="text/javascript">
-	function goChart(p_num){
-		document.frm.action="<%=request.getContextPath() %>/user_cart_add.do?pnum="+ p_num;
+	function goCart(){
+		document.frm.action="<%=request.getContextPath() %>/user_cart_add.do";
 		document.frm.submit();
 	}
 </script>
@@ -33,6 +33,9 @@
 			</td>
 			<td>
 				<form method="post" name="frm">
+				<input type="hidden" name="p_num" value="${dto.getPnum() }">
+				<input type="hidden" name="p_spec" value="${dto.getPspec() }">
+				<input type="hidden" name="p_image" value="${dto.getPimage() }">
 				상품번호 : ${dto.getPnum() } <br> <br>
 				상품이름 : <input type="text" name="p_name" value="${dto.getPname() }"> <br> <br>
 				상품가격 : <input type="text" name="p_price" value="${dto.getPrice() }"> <br> <br>
@@ -43,7 +46,7 @@
 				<table border="0" cellspacing="0" width="90%" align="center">
 					<tr>
 						<td>
-							<a href="javascript:goCart('${dto.getPnum() }')>">
+							<a href="javascript:goCart()">
 							<img src="<%=request.getContextPath() %>/uploadFile/btn_cart.gif" border="0">
 							</a>
 						</td>
